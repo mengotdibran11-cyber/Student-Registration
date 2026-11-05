@@ -1,0 +1,144 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 24px 16px;
+  font-family: Arial, sans-serif;
+  background: #f4f6f8;
+  color: #1f2937;
+}
+
+main {
+  width: 100%;
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 28px;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+  margin: 0 0 6px;
+  font-size: 24px;
+  text-align: center;
+  color: #1e3a8a;
+}
+
+main > p {
+  margin: 0 0 20px;
+  text-align: center;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+form div {
+  margin-bottom: 16px;
+}
+
+label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="date"],
+input[type="password"],
+select {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  background: #ffffff;
+}
+
+input:focus,
+select:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+}
+
+fieldset {
+  margin: 0 0 16px;
+  padding: 10px 12px 6px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+}
+
+legend {
+  padding: 0 6px;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+fieldset label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 16px 8px 0;
+  font-weight: normal;
+  font-size: 15px;
+}
+
+label:has(input[type="checkbox"]) {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-weight: normal;
+  line-height: 1.4;
+}
+
+button {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #ffffff;
+  background: #2563eb;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #1d4ed8;
+}
+
+.error {
+  display: block;
+  margin-top: 4px;
+  font-size: 13px;
+  color: #dc2626;
+}
+
+.success {
+  margin-bottom: 16px;
+  padding: 12px;
+  background: #dcfce7;
+  border: 1px solid #86efac;
+  border-radius: 4px;
+  color: #166534;
+  text-align: center;
+}
+
+@media (max-width: 600px) {
+  body {
+    padding: 12px 8px;
+  }
+
+  main {
+    padding: 18px;
+  }
+
+  h1 {
+    font-size: 20px;
+  }
+}
