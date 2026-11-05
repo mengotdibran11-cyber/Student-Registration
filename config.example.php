@@ -1,8 +1,4 @@
 <?php
-/**
- * Example database configuration.
- * Copy this file to config.php and replace the values with your own.
- */
 return [
     'host'    => 'localhost',
     'port'    => 3306,

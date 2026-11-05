@@ -11,13 +11,11 @@ const DEPARTMENTS = [
 const LEVELS  = ['100', '200', '300', '400'];
 const GENDERS = ['Female', 'Male', 'Prefer not to say'];
 
-/** Escape output for HTML. */
 function e(?string $value): string
 {
     return htmlspecialchars($value ?? '', ENT_QUOTES, 'UTF-8');
 }
 
-/** Print an error message under a field, if there is one. */
 function showError(array $errors, string $field): void
 {
     if (isset($errors[$field])) {
@@ -25,7 +23,6 @@ function showError(array $errors, string $field): void
     }
 }
 
-/** Mark an option as selected when it matches the previous value. */
 function selected(array $old, string $field, string $value): string
 {
     return (($old[$field] ?? '') === $value) ? ' selected' : '';
@@ -39,7 +36,6 @@ $errors  = [];
 $old     = [];
 $success = '';
 
-// One-time success message after redirect
 if (!empty($_SESSION['success'])) {
     $success = $_SESSION['success'];
     unset($_SESSION['success']);
@@ -47,7 +43,6 @@ if (!empty($_SESSION['success'])) {
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    // Collect and trim input (passwords are not trimmed)
     $old = [
         'full_name'     => trim((string)($_POST['full_name'] ?? '')),
         'email'         => trim((string)($_POST['email'] ?? '')),
@@ -62,12 +57,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $confirmPassword = (string)($_POST['confirm_password'] ?? '');
     $accuracy        = ($_POST['confirm_accuracy'] ?? '') === 'yes';
 
-    // CSRF check
     if (!hash_equals($_SESSION['csrf'], (string)($_POST['csrf'] ?? ''))) {
         $errors['form'] = 'Your session expired. Please try again.';
     }
 
-    // Full name
     if ($old['full_name'] === '') {
         $errors['full_name'] = 'Full name is required.';
     } elseif (mb_strlen($old['full_name']) < 3 || mb_strlen($old['full_name']) > 100) {
@@ -76,14 +69,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errors['full_name'] = 'Full name may only contain letters, spaces, apostrophes, dots and hyphens.';
     }
 
-    // Email
     if ($old['email'] === '') {
         $errors['email'] = 'Email address is required.';
     } elseif (strlen($old['email']) > 150 || !filter_var($old['email'], FILTER_VALIDATE_EMAIL)) {
         $errors['email'] = 'Enter a valid email address.';
     }
 
-    // Phone (Cameroon): accepts 6XXXXXXXX, 2376XXXXXXXX or +2376XXXXXXXX
     $phone = preg_replace('/[\s\-]/', '', $old['phone']);
     if ($phone === '') {
         $errors['phone'] = 'Phone number is required.';
@@ -100,14 +91,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    // Matriculation number: 2 letters + 7 digits (e.g. SE2026001)
     if ($old['matric_number'] === '') {
         $errors['matric_number'] = 'Matriculation number is required.';
     } elseif (!preg_match('/^[A-Z]{2}\d{7}$/', $old['matric_number'])) {
         $errors['matric_number'] = 'Use 2 letters followed by 7 digits, e.g. SE2026001.';
     }
 
-    // Date of birth
     if ($old['date_of_birth'] === '') {
         $errors['date_of_birth'] = 'Date of birth is required.';
     } else {
@@ -124,7 +113,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    // Department, level, gender
     if ($old['department'] === '') {
         $errors['department'] = 'Select a department.';
     } elseif (!in_array($old['department'], DEPARTMENTS, true)) {
@@ -143,7 +131,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errors['gender'] = 'Invalid gender option.';
     }
 
-    // Password
     if ($password === '') {
         $errors['password'] = 'Password is required.';
     } elseif (strlen($password) < 8) {
@@ -160,12 +147,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errors['confirm_password'] = 'Passwords do not match.';
     }
 
-    // Accuracy confirmation
     if (!$accuracy) {
         $errors['confirm_accuracy'] = 'You must confirm that the information is accurate.';
     }
 
-    // Insert
     if (!$errors) {
         try {
             $config = require __DIR__ . '/config.php';
@@ -202,7 +187,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ':password_hash' => password_hash($password, PASSWORD_DEFAULT),
             ]);
 
-            // Post/Redirect/Get so a refresh doesn't resubmit the form
             $_SESSION['success'] = 'Registration successful. Welcome, ' . $old['full_name'] . '!';
             $_SESSION['csrf']    = bin2hex(random_bytes(32));
             header('Location: ' . strtok($_SERVER['REQUEST_URI'], '?'));
@@ -210,7 +194,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         } catch (PDOException $ex) {
             if ((int)($ex->errorInfo[1] ?? 0) === 1062) {
-                // Duplicate entry: find out which unique key was hit
                 if (str_contains($ex->getMessage(), 'uk_students_email')) {
                     $errors['email'] = 'This email address is already registered.';
                 } elseif (str_contains($ex->getMessage(), 'uk_students_matric')) {
